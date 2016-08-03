@@ -2,16 +2,19 @@
 #'
 #' Estimate the VaR of a portfolio using the historical simulation approach
 #' for specified confidence levels. The holding period is implied by the P/L
-#' data passed to the function.
+#' data passed to the function. This function uses the quantile, rather than
+#' the method used in Measuring Market Risk - that is approximating the pdf
+#' by drawing lines through the midpoints of a histogram.
 #'
 #' @param x       a vector of P/L data
 #' @param conf    the confidence level
 #'
 
 var_historical <- function(x, conf) {
-  sorted_losses <- sort(-x)
 
-}
+  quantile(-x, probs = 1 - conf, na.rm = TRUE)
+
+  }
 
 
 #' Value At Risk for normally distributed P/L
