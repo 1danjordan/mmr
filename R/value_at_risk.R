@@ -10,9 +10,9 @@
 #' @param conf    the confidence level
 #'
 
-var_historical <- function(x, conf) {
+var_historical <- function(x, conf = 0.95) {
 
-  quantile(-x, probs = 1 - conf, na.rm = TRUE)
+  quantile(-x, probs = 1 - conf, na.rm = TRUE, names = FALSE)
 
   }
 
@@ -47,4 +47,11 @@ var_lognormal <- function(mu, sigma, investment, conf = 0.95, holding = 1) {
 
   investment * (1 - exp(-var_normal(mu, sigma, conf, holding)))
 
-  }
+}
+
+var_cornishfisher <- function(mu, sigma, skew, kurt, conf) {
+  z <- quantile(1 - conf)
+  adj <- (1/6) * (z ^ 2 - 1) + (1 / 24)*(z ^ 3 - 3 * z) * (kurt - 3) - (1 / 36) * (2 * z ^ 3 - 5 * z) * skew ^ 2
+
+  - sigma* (z + adj) - mu
+}
