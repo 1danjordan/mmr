@@ -9,6 +9,7 @@
 #' @param x       a vector of P/L data
 #' @param conf    the confidence level
 #'
+#' @return VaR measure (numeric)
 
 var_historical <- function(x, conf = 0.95) {
 
@@ -26,13 +27,15 @@ var_historical <- function(x, conf = 0.95) {
 #' @param sigma    standard deviation of daily P/L
 #' @param conf     the confidence level
 #' @param holding  the holding period in days
+#'
+#' @return VaR measure (numeric)
 
 
 var_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 
   -sigma * sqrt(holding) * qnorm(1 - conf) - (mu * holding)
 
-  }
+}
 
 #' Value at Risk for lognormally distributed P/L
 #'
@@ -42,6 +45,8 @@ var_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 #'
 #' @inheritParams var_normal
 #' @param investment  the size of investment
+#'
+#' @return VaR measure (numeric)
 
 var_lognormal <- function(mu, sigma, investment, conf = 0.95, holding = 1) {
 
@@ -49,9 +54,10 @@ var_lognormal <- function(mu, sigma, investment, conf = 0.95, holding = 1) {
 
 }
 
-var_cornishfisher <- function(mu, sigma, skew, kurt, conf) {
+var_cornishfisher <- function(mu, sigma, skew, kurt, conf = 0.95) {
+
   z <- quantile(1 - conf)
   adj <- (1/6) * (z ^ 2 - 1) + (1 / 24)*(z ^ 3 - 3 * z) * (kurt - 3) - (1 / 36) * (2 * z ^ 3 - 5 * z) * skew ^ 2
+  -sigma* (z + adj) - mu
 
-  - sigma* (z + adj) - mu
 }
