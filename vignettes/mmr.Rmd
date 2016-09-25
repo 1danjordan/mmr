@@ -1,0 +1,19 @@
+---
+title: "Measuring Market Risk"
+author: "Daniel Jordan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Measuring Market Risk}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## What is mmr?
+
+The Measuring Market Risk (mmr) package takes the Matlab code that accompanies Kevin Dowd's Measuring Market Risk textbook (2002) and rewrites it in R in a functional style using the purrr package. Dowd's book is an outstanding introduction to market risk analysis, for students and practioners. The combination of text and code makes for a powerful learning experience, however there are drawbacks in his choice of Matlab. First and foremost, Matlab is a proprietary language which is prohibitively expensive for most students. This instantly prevents many from using a very good book. On top of that by endorsing Matlab, students/practioners are drawn into a closed ecosystem where "toolboxes" providing even the most basic functionality are costly. Secondly, Matlab is not a functional language. This makes turning simple and elegant mathematical ideas into simple and elegant code difficult. 
+
+R is a functional open source language with a booming package ecosystem; solving both problems. mmr is not a direct port from Dowd's Matlab to R. All important functionality is included along with some functions Dowd included in his text but left out of the accompanying code.
+
+## What is mmr for?
+mmr is for learning the basics of risk measurement - it is not for production risk management systems. Each function is small and simple so they can be understood easily. This vignette will provide examples to illustrate how these the functions in mmr can be chained together to do meaningful analysis and produce some pretty plots. 
