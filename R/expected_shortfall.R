@@ -5,6 +5,8 @@
 #'
 #' @param x      P/L data
 #' @param conf   confidence level
+#'
+#' @return ES measure (numeric)
 
 es_historical <- function(x, conf = 0.95) {
   losses <- -x
@@ -22,6 +24,7 @@ es_historical <- function(x, conf = 0.95) {
 #' @param conf      the confidence level (double)
 #' @param holding   the holding period in days (double)
 #'
+#' @return ES measure (numeric)
 
 es_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 
@@ -29,6 +32,21 @@ es_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 
 }
 
+#' Compute Expected Shortfall given a VaR measure
+#'
+#' Compute ES takes a VaR function and its arguments and computes the
+#' expected shortfall by taking an average of the tail VaRs.
+
+# Currently broken --------------------------------
+
+# compute_es <- function(var_fun, conf = 0.95, ..., n = 1000) {
+#
+#   conf_seq <- seq(conf, 1, length.out = n)
+#   f <- partial(var_fun, ...)
+#
+#   map_dbl(conf_seq, ~ f(conf = .x)) %>%
+#     mean()
+# }
 
 #' Expected Shortfall for normally distributed geometric returns
 #'
@@ -38,6 +56,7 @@ es_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 #'
 #' @inheritParams es_normal
 #' @param investment          the size of investment
+#' @return ES measure (numeric)
 
 es_lognormal <- function(mu, sigma, investment, conf = 0.95, holding = 1) {
 
@@ -46,4 +65,22 @@ es_lognormal <- function(mu, sigma, investment, conf = 0.95, holding = 1) {
 
   map_dbl(conf, ~ var_ln(conf = .x)) %>%
     mean()
+}
+
+#' Expected Shortall using the Cornish Fisher adjustment for non-normality
+#'
+#' Function estimates the ES for near normal P/L using the  Cornish Fisher
+#' adjustment for non-normality for specified confidence level.
+#'
+#' @param mu        mean daily P/L data
+#' @param sigma     standard deviation of daily P/L data
+#' @param skew      skewness
+#' @param kurt      kurtosis
+#' @param conf      the confidence level (double)
+#' @param holding   the holding period in days (double)
+#'
+#' @return ES measure (numeric)
+
+es_cornishfisher <- function(mu, sigma, skew, kurt, conf = 0.95) {
+  compute_es(var_cornishfisher, mu = mu, sigma = sigma, skew = skew, kurt = kurt, conf = conf)
 }
