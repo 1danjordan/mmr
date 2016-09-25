@@ -5,6 +5,8 @@
 #'
 #' @param x       P/L data
 #' @param decay   decay factor (0 < x < 1)
+#'
+#' @return P/L data weighted by age (numeric)
 
 weight_by_age <- function(x, decay = 0.9) {
   if(decay <= 0 || decay >= 1) stop("Decay factor must be between 0 and 1")
@@ -23,6 +25,8 @@ weight_by_age <- function(x, decay = 0.9) {
 #'
 #' @param x       P/L data
 #' @param decay   decay factor (0 < x < 1)
+#'
+#' @return P/L data weighted by volatility (numeric)
 
 weight_by_vol <- function(x, decay) {
   if(decay <= 0 || decay >= 1) stop("Decay factor must be between 0 and 1")
@@ -32,9 +36,16 @@ weight_by_vol <- function(x, decay) {
 
 }
 
+#' TODO: Filtered Historical Simulation (pg. 69 4.4.3)
+
 #' Exponentially Weigthed Moving Average for estimating volatility
 #'
 #' Estimate volatilities of time series of returns using an EWMA
+#'
+#' @param x      P/L data
+#' @param decay  decay factor (0 < x < 1)
+#'
+#' @return EWMA volatilities (numeric)
 
 EWMA_vol <- function(x, decay = 0.85) {
   if(decay <= 0 || decay >= 1) stop("Decay factor must be between 0 and 1")
@@ -46,6 +57,11 @@ EWMA_vol <- function(x, decay = 0.85) {
 
 #' Exponentially Weighted Moving Average covariance between
 #' two series of returns
+#'
+#' @params x, y  P/L data
+#' @param  decay decay factor (0 < x < 1)
+#'
+#' @return EWMA covariance (numeric)
 
 EWMA_cov <- function(x, y, decay = 0.85) {
   if(decay <= 0 || decay >= 1) stop("Decay factor must be between 0 and 1")
@@ -56,6 +72,10 @@ EWMA_cov <- function(x, y, decay = 0.85) {
 
 #' Exponentially Weighted Moving Average correlation between
 #' two series of returns
+#'
+#' @inheritParams EWMA_cov
+#'
+#' @return EWMA correlation
 
 EWMA_corr <- function(x, y, decay = 0.85) {
   if(decay <= 0 || decay >= 1) stop("Decay factor must be between 0 and 1")
