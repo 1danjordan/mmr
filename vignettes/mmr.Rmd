@@ -19,11 +19,69 @@ R is a functional open source language with a booming package ecosystem; solving
 
 mmr is for learning the basics of risk measurement - it is not for production risk management systems. Each function is small and simple so they can be understood easily. This vignette will provide examples to illustrate how these the functions in mmr can be chained together to do meaningful analysis and produce some pretty plots. 
 
+## Packages Required
+
+For this walkthrough you will need to install and load the following packages:
+
+```{r load_packages, message=FALSE}
+# devtools::install_github("dandermotj/mmr")
+packages <- c("quantmod", "ggplot2", "tibble", "purrr")
+invisible(lapply(packages, library, character.only = TRUE))
+```
+
+ * mmr for market risk analysis
+ * quantmod for fetching financial data
+ * ggplot2 for plotting data
+ * tibble for nicer data frames
+ * purrr for functional tools
+
 ## Loading Financial Data
 
-Load in data with quantmod `getSymbols`function or some other API client would be nice.
+To get financial data we will use the quantmod package. The `getSymbols`function can fetch data from a range of APIs (Yahoo finance, FRED, ...). Unfortunately, `getSymbols` loads data silently by default (this will change in version 0.5), so for clarity and reproducibility we'll explicitly assign the data:  `getSymbols(..., auto.assign = FALSE)`. The `getSymbols` function is quite complicated so make sure to read the docs (`?getSymbols`).
+
+```{r echo=FALSE}
+# Prevent getSymbols from big warning print
+options("getSymbols.warning4.0"=FALSE)
+```
+
+
+The ticker we will use as an example is Tableau (`NYSE: DATA`). Tableau is interesting from a market risk standpoint because in early 2016, between February 3rd and February 8th its stock price halved unexpectedly. 
+
+```{r load_data}
+tab <- getSymbols("DATA", source = "yahoo", auto.assign = FALSE)
+str(tab)
+```
+
+By defualt a `xts` time series object. To make life easier we will convert this to a tibble (a data frame like object following the tidy data  philosophy). Tibbles are nearly identical to data frames, but have much nicer print methods. The variable names of `tab` are annoying always being prefixed by `DATA`, so we'll remove this prefix.
+
+(We could put it in a tidy format with `broom::tidy(tab)` but let's keep it this way for the moment.) By "tidying" the data we preserve the dates in the `index` column, all the variables are collected into the `series` variable and their corresponding prices are in the `value` column. This long form of data makes working with other packages such as `dplyr` simpler. 
+
+```{r process_data}
+tab <- as_tibble(tab) %>% add_column(Date = index(tab))
+names(tab) <- c("Open", "High", "Close", "Low", "Volume", "Adjusted", "Date")
+tab
+```
+
+Let's quickly plot the adjusted closing price with ggplot so we have an idea of the history of Tableau's price.
+
+```{r plot_tab_price, fig.width=6, fig.align="center"}
+ggplot(data = tab, aes(x = Date, y = Adjusted)) +
+  geom_line() +
+  labs(title = "Tableau Stock Price")
+```
+
+The final data processing step before we begin is turning price into returns. When analysing risk, we look at Profit/Loss (P/L) figures, not price. Some people prefer to think of Loss/Profit (L/P) instead because we are focusing on the potential **losses** not potential returns, but this is just a preference. 
+
+> To make things very clear, mmr *always* expects P/L data.
+
+One is just the negative of the other: $P/L = -L/P$
+
+```{r price_to_rets}
+
+```
 
 ## Basic Risk Measures
+
 
 ### Historical Simulation
 
