@@ -22,8 +22,15 @@
 #' x <- rnorm(1000)
 #' # compute the historical var across a window of a year
 #' roll(x, var_historical, conf = 0.8, width = 250)
+#'
+#' Really the decision lies with:
+#' if kept simple, we map(df, ~ roll(~ .f(.x)))
+#' but this means we cannot use roll to compute
+#' functions that require interactions like cov(x,y)
+#'
+#' That seems like the best way to deal with dataframes
 
-roll <- function(x, .f, ..., width = 10, extend = FALSE) {
+roll <- function(x, .f, ..., width = 1, extend = FALSE) {
 
   .f <- as_function(.f, ...)
 
@@ -35,5 +42,4 @@ roll <- function(x, .f, ..., width = 10, extend = FALSE) {
   }
 
   map_dbl(idxs, ~ .f(x[.x]))
-
 }

@@ -36,17 +36,22 @@ es_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 #'
 #' Compute ES takes a VaR function and its arguments and computes the
 #' expected shortfall by taking an average of the tail VaRs.
+#'
+#' @param .f     a VaR function to compute ES with
+#' @param ...    further arguments to pass
+#' @param conf   level of confidence
+#' @param n      number of slices to approximate tail VaR with
+#'
+#' @example
+#' # Compute lognormal expected shorfall function using lognormal VaR
+#' compute_es(var_lognormal, conf = 0.9, mu, sigma, investment, holding)
 
-# Currently broken --------------------------------
+compute_es <- function(.f, ..., conf = 0.9, n = 1000) {
 
-# compute_es <- function(var_fun, conf = 0.95, ..., n = 1000) {
-#
-#   conf_seq <- seq(conf, 1, length.out = n)
-#   f <- partial(var_fun, ...)
-#
-#   map_dbl(conf_seq, ~ f(conf = .x)) %>%
-#     mean()
-# }
+  .f <- partial(.f, ...)
+  conf_seq <- seq(conf, 1, length.out = n)
+  map_dbl(conf_seq, ~ .f(conf = .x)) %>% mean()
+}
 
 #' Expected Shortfall for normally distributed geometric returns
 #'
