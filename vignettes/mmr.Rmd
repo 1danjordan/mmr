@@ -72,13 +72,35 @@ ggplot(data = tab, aes(x = Date, y = Adjusted)) +
 
 Tableau's dramatic price crash is obvious in the plot.
 
+From now on, we're going to concentrate on the dailty adjusted price of Tableau, so we'll copy it into its own variable `price` for readability.
+
+```{r}
+price <- tab$Adjusted
+```
+
 The final data processing step before we begin is turning price into profit and loss data. When analysing risk, we look at Profit/Loss (P/L) figures, not price. Some people prefer to think of Loss/Profit (L/P) instead because we are focusing on the potential **losses** not potential returns, but this is just a preference. There are a few different P/L calculations, some which include borrowing and reinvestment but we'll go with the most basic, simply the differenced series. 
 
 $$ P/L = P_t - P_{t - 1} $$
 
-To make things very clear, mmr *always* expects P/L data.
+By computing the P/L the length of the output will be one less than the length of the price vector. This makes it awkward dealing with data frames or tibbles, because they are rectangular data structures requiring each column to contain the same number of rows. mmr provides a simple helper `profit_loss` function to compute P/L data that preserves length by appending `NA` to the last row. 
 
-One is just the negative of the other: $P/L = -L/P$ To get P/L from prices. 
+```{r profit_loss}
+profit_loss <- function(price){
+  c(diff(price), NA)
+}
+
+# We only want to compute the P/L for the prices of the stock
+# this basic function won't work for dates appropriately, and
+# we want to keep the volume column the same
+price_cols <- c(1:4, 6)
+
+tab %>% dmap_at(price_cols, profit_loss) %>% 
+  ggplot(aes(x = Date, y = Adjusted)) +
+  geom_line() +
+  labs(title = "P/L Tableau")
+``` 
+
+To make things very clear, mmr functions *always* expects P/L data. One is just the negative of the other: $P/L = -L/P$ To get P/L from prices. 
 
 To compute returns we have a `price_to_rets` function. 
 
@@ -86,6 +108,7 @@ To compute returns we have a `price_to_rets` function.
 price_to_rets <- function(price) {
   diff(price)/price[-length(price)]
 }
+price <- price_to_rets()
 ```
 
 ## Basic Risk Measures
