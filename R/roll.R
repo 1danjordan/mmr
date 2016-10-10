@@ -32,6 +32,10 @@
 
 roll <- function(x, .f, ..., width = 1, extend = FALSE) {
 
+  if(length(x) < width) {
+    stop("Width is greater than length of ", call. = FALSE)
+  }
+
   .f <- as_function(.f, ...)
 
   idxs <- if(extend) {

@@ -42,7 +42,7 @@ To get financial data we will use the quantmod package. The `getSymbols`function
 ```{r echo=FALSE}
 # Prevent getSymbols from big warning print
 options("getSymbols.warning4.0"=FALSE)
-```
+  ```
 
 
 The ticker we will use as an example is Tableau (`NYSE: DATA`). Tableau is interesting from a market risk standpoint because in early 2016, between February 3rd and February 8th its stock price halved unexpectedly. 
@@ -94,10 +94,14 @@ profit_loss <- function(price){
 # we want to keep the volume column the same
 price_cols <- c(1:4, 6)
 
-tab %>% dmap_at(price_cols, profit_loss) %>% 
+tab_pl <- tab %>% dmap_at(price_cols, profit_loss) 
+tab_pl %>% 
   ggplot(aes(x = Date, y = Adjusted)) +
   geom_line() +
   labs(title = "P/L Tableau")
+
+tab_pl %>% ggplot(aes(x = Adjusted)) +
+  geom_histogram()
 ``` 
 
 To make things very clear, mmr functions *always* expects P/L data. One is just the negative of the other: $P/L = -L/P$ To get P/L from prices. 
