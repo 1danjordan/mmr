@@ -9,3 +9,22 @@ The package is written in a functional style using `purrr`. And to take a quote 
 > As always in risk measurement, we should keep our wits about us and not be too trusting of the software we use or the results we get.
 
 So I ask users to do the same of my own work. Any issues or pull requests are welcome. 
+
+# To Do
+
+Vignette where we use multiple VaR functions to estimate VaR for the same portfolio returns. Do this by creating a list of functions, and mapping over the functions. Then we can gather the wide data frame and plot very easily. Use partials in the list of functions. 
+
+Example showing sub-additivity of ES and where VaR is not sub-additive.
+
+Potentially use `tsibble`? 
+
+Theme this package around *tidy risk analysis* - so make it simple to:
+
+  * import data (using API)
+  * define risk measure (VaR, ES, etc.)
+  * apply risk measure functions to data
+  * plot results 
+
+Doing this analysis should be super easy using the tools the tidyverse has given us.
+
+Think about API - there's many types of  VaR and ES. Should there be one VaR and function with an argument to specify which VaR measure like `value_at_risk(x, type = "normal")` or should we have a function for every type of VaR like `var_normal(x)`? I'm leaning towards the first...  
