@@ -12,9 +12,9 @@ So I ask users to do the same of my own work. Any issues or pull requests are we
 
 # To Do
 
-Vignette where we use multiple VaR functions to estimate VaR for the same portfolio returns. Do this by creating a list of functions, and mapping over the functions. Then we can gather the wide data frame and plot very easily. Use partials in the list of functions. 
+Vigrette where we use multiple VaR functions to estimate VaR for the same portfolio returns. Do this by creating a list of functions, and mapping over the functions. Then we can gather the wide data frame and plot very easily. Use partials in the list of functions. 
 
-Example showing sub-additivity of ES and where VaR is not sub-additive.
+Example showing sub-additivity of ES and where VaR is not sub-additive. VaR is subadditive for ellitical distributions such as the normal distribution though. So maybe show that an example of it being sub-additive and not being sub-additive with distributions of losses that are more typical.
 
 Potentially use `tsibble`? 
 
