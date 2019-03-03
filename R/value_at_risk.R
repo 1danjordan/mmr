@@ -1,3 +1,52 @@
+#' Value at Risk
+#'
+#' Estimate a various parameteric and non-parametric value at risk
+#' measures
+#'
+#' @param data      a dataframe of returns
+#' @param ...       unquoted column names to use in computation
+#' @param method    the method for computing VAR
+#' @param weighting a function for weighting returns
+#' @param params    a list of named parameters for specific methods
+#'
+#' @example
+#' portfolios %>%
+#'   value_at_risk(corporate, method = "historical simulation")
+#'
+#' returns %>%
+#'   group_by(portfolio) %>%
+#'   value_at_risk(
+#'     losses,
+#'     method = "historical simulation",
+#'     weighting = vol_weighting(decay = 0.01)
+#'   )
+
+value_at_risk <- function(x) {
+  UseMethod("value_at_risk")
+}
+
+value_at_risk.data.frame <- function(data, ..., method, weighting, params) {
+
+}
+
+value_at_risk.grouped_df <- function(data, ..., method, weighting, params) {
+  dplyr::summarise(
+    data,
+    ...
+  )
+}
+
+value_at_risk.numeric <- function(x, method, params) {
+
+}
+
+# Convert matrices to a data frame and dispatch to the dataframe method
+
+value_at_risk.matrix <- function(x, ..., method, weighting, params) {
+  df <- as.data.frame(x)
+  value_at_risk(df, ..., method, weighting, params)
+}
+
 #' Historical Value at Risk
 #'
 #' Estimate the VaR of a portfolio using the historical simulation approach
