@@ -2,11 +2,13 @@
 
 mmr (Measuring Market Risk) is a package for computing market risk measures such as value at risk and expected shortfall. The is inspired by Kevin Dowd's Measuring Market Risk (2002) and the Matlab code associated with it.
 
-## Tidy API 
-
-This package is going to implement a tidy API - similar to that of yardstick. Using `mmr` in analysis should be as easy as using `dplyr`. The goal is to be able to write code like this: 
+## Installation
 
 ```r
+devtools::install_github("dandermotj/mmr")
+
+data(portfolio_returns)
+
 portfolio_returns %>% 
   group_by(portfolio) %>% 
   value_at_risk(
@@ -15,12 +17,12 @@ portfolio_returns %>%
     weighting = weight_volatility(decay = 0.04)
   ) 
 
-
 portfolio_returns %>% 
   expected_shortfall(returns, method = "lognormal")
 ```
+This package implements an "tidy API" alla the [Tidyverse](https://www.tidyverse.org/). Lot's of inspiration taken from [`yardstick`](https://github.com/tidymodels/yardstick/).  
 
-This code is clear and easily read.    
+## Motivation 
 
 Dowd provides the motivation for this package in his preface via a quote:
 
