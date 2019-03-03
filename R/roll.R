@@ -17,7 +17,7 @@
 #' @param width   the width of the window
 #' @param extend  extend the window as it rolls (logical)
 #'
-#' @example
+#' @examples
 #' # Simulate 4 years of daily returns
 #' x <- rnorm(1000)
 #' # compute the historical var across a window of a year

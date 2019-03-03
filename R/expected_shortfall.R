@@ -6,18 +6,22 @@
 #' @inheritParams value_at_risk
 #'
 #' @examples
+#' # Compute 5% ES for the corporate portfolio
 #' portfolio_returns %>%
 #'   filter(portfolio == "corporate") %>%
 #'   expected_shortfall(
 #'     returns,
+#'     alpha = 0.05,
 #'     method = "historical simulation",
 #'     weighting = weight_exp(lambda = 0.9)
 #'   )
 #'
+#' # Compute 1% ES for each portfolio
 #' portfolio_returns %>%
 #'   group_by(portfolio) %>%
 #'   expected_shortfall(
 #'     returns,
+#'     alpha = 0.05,
 #'     method = "Cornish Fisher"
 #'   )
 
@@ -89,7 +93,7 @@ es_normal <- function(mu, sigma, conf = 0.95, holding = 1) {
 #' @param conf   level of confidence
 #' @param n      number of slices to approximate tail VaR with
 #'
-#' @example
+#' @examples
 #' # Compute lognormal expected shorfall function using lognormal VaR
 #' compute_es(var_lognormal, conf = 0.9, mu, sigma, investment, holding)
 

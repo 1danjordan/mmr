@@ -5,20 +5,29 @@
 #'
 #' @param data      a dataframe of returns
 #' @param ...       unquoted column names to use in computation
+#' @param alpha     1 - confidence level
 #' @param method    the method for computing VAR
 #' @param weighting a function for weighting returns
 #' @param params    a list of named parameters for specific methods
 #'
-#' @example
-#' portfolios %>%
-#'   value_at_risk(corporate, method = "historical simulation")
+#' @examples
+#' # compute 5% VaR for the corporate portfolio
+#' portfolio_returns %>%
+#'   filter(portfolio == "corporate") %>%
+#'   value_at_risk(
+#'     returns,
+#'     alpha = 0.05,
+#'     method = "historical simulation"
+#'   )
 #'
-#' returns %>%
+#' # Compute 1% VaR for each portfolio
+#' portfolio_returns %>%
 #'   group_by(portfolio) %>%
 #'   value_at_risk(
-#'     losses,
+#'     returns,
+#'     alpha = 0.01,
 #'     method = "historical simulation",
-#'     weighting = vol_weighting(decay = 0.01)
+#'     weighting = weight_vol(decay = 0.01)
 #'   )
 
 value_at_risk <- function(x) {

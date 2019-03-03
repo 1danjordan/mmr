@@ -58,7 +58,7 @@ EWMA_vol <- function(x, decay = 0.85) {
 #' Exponentially Weighted Moving Average covariance between
 #' two series of returns
 #'
-#' @params x, y  P/L data
+#' @param x, y  P/L data
 #' @param  decay decay factor (0 < x < 1)
 #'
 #' @return EWMA covariance (numeric)

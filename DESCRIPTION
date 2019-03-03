@@ -1,17 +1,15 @@
 Package: mmr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Measuring Market Risk
 Version: 0.1.0
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Authors@R: person("Daniel", "Jordan", email = "dandermotj@gmail.com", role = c("aut", "cre"))
+Description: Market risk measures such as value at risk and expected shortfall
+License: MIT
 LazyData: TRUE
-Imports: purrr,
-         assertive.types
-Suggests: testthat,
-    knitr,
-    rmarkdown
+Imports: dplyr
+Suggests: testthat
 URL: http://github.com/dandermotj/mmr
 BugReports: http://github.com/dandermotj/mmr/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
+Encoding: UTF-8
