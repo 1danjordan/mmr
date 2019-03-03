@@ -1,4 +1,51 @@
-#' Expcted Shortfall using the historical simulation approach
+#' Expected Shortfall
+#'
+#' Estimate various parametric and non-parametric expected shortfall
+#' measures
+#'
+#' @inheritParams value_at_risk
+#'
+#' @examples
+#' portfolio_returns %>%
+#'   filter(portfolio == "corporate") %>%
+#'   expected_shortfall(
+#'     returns,
+#'     method = "historical simulation",
+#'     weighting = weight_exp(lambda = 0.9)
+#'   )
+#'
+#' portfolio_returns %>%
+#'   group_by(portfolio) %>%
+#'   expected_shortfall(
+#'     returns,
+#'     method = "Cornish Fisher"
+#'   )
+
+expected_shortfall <- function(x) {
+  UseMethod("expected_shortfall")
+}
+
+expected_shortfall.data.frame <- function(data, ..., method, weighting, params) {
+
+}
+
+expected_shortfall.grouped_df <- function(data, ..., method, weighting, params) {
+  res <- dplyr::summarise(
+    data,
+    ...
+  )
+}
+
+expected_shortfall.matrix <- function(x, ..., method, weighting, params) {
+  d <- as.data.frame(x)
+  expected_shortfall(d, ..., method, weighting, params)
+}
+
+expected_shortfall.numeric <- function(x, ..., method, weighting, params) {
+
+}
+
+#' Expected Shortfall using the historical simulation approach
 #'
 #' Estimates the ES by averaging the losses in the tail. Holding time
 #' is inferred by the frequency of the data.
