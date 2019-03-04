@@ -163,8 +163,7 @@ This seems like a nice way to do this. Although, why not the simplicity of this 
 ```r
 portfolio_returns %>% 
   bootstrap(times = 1000) %>% 
-  group_by(id) %>% 
-  mutate(VaR = value_at_risk(analysis(splits), 0.01)) %>% 
+  mutate(VaR = map(splits, value_at_risk(analysis(.x), 0.01)) %>% 
   unnest(VaR)
 ```
 
@@ -190,3 +189,41 @@ So I think ultimately it's best *not to mess with `rset` methods*.
 ## Interpolating Between Points With Non-Parametric Models 
 
 Also need to decide the best way best way to interpolate between data points when `alpha` sits between data points. Probably just do the linear interpolation way.
+
+## Weighting Functions 
+
+So I think actually a lot of this implementation will revolve around the weighting functions. I was confused by how a multivariate GARCH model would work in this context, but actually passing in a *function* that simply takes returns (in a dataframe or a matrix) and outputs those weighted returns mean that it's simple enough. Because let's say first we need to fit the GARCH model - well then that's the paramaters we pass our weighting function:
+
+```r
+garch_weighting <- portfolio_returns[1:3] %>% weight_garch()
+
+portfolio_returns %>% 
+  value_at_risk(A:C, 0.01, "historical simulation", garch_weighting)
+
+# Equivalent to
+portfolio_returns %>% 
+  value_at_risk(A:C, 0.01, "historical simulation", weight_garch(.[1:3))
+```
+
+Is this enough though? We would need to check that the assets used to train the GARCH model existed in the data we were passing it. That's not that big a deal though. 
+
+I think this fixes the issue with historical filtering approach because we can train the GARCH model independently, and then still use it in the bootstrap samples. So filtered historical simulation would look like this:
+
+```r
+garch <- weight_garch(portfolio_returns[1:3])
+fhs <- portfolio_returns %>% 
+  bootstrap(times = 1000) %>% 
+  mutate(
+    VaR = map(splits, 
+      ~ value_at_risk(analysis(.x), 0.01, "historical", garch)
+  ) %>% 
+  unnest(VaR)
+
+# A histogram of 
+fhs %>% 
+  ggplot(aes(VaR)) + 
+  geom_histogram() + 
+  theme_minimal()
+```
+
+This seems like a flexible enough API that it might work well.
