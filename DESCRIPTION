@@ -7,9 +7,12 @@ Description: Market risk measures such as value at risk and expected shortfall
 License: MIT
 LazyData: TRUE
 Imports: dplyr
-Suggests: testthat
-URL: http://github.com/dandermotj/mmr
-BugReports: http://github.com/dandermotj/mmr/issues
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+URL: http://github.com/1danjordan/mmr
+BugReports: http://github.com/1danjordan/mmr/issues
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Encoding: UTF-8
