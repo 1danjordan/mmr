@@ -5,7 +5,7 @@ mmr (Measuring Market Risk) is a package for computing market risk measures such
 ## Installation
 
 ```r
-devtools::install_github("dandermotj/mmr")
+devtools::install_github("1danjordan/mmr")
 
 data(portfolio_returns)
 
@@ -35,6 +35,14 @@ And to take a quote from Dowd himself:
 So I ask users to do the same of my own work. Any issues or pull requests are welcome. 
 
 # To Do
+
+Use tidyeval framework through `rlang`.
+
+Decomposition of Portfolio VaR:
+
+  * Component VaR
+  * Marginal VaR 
+  * VaR Contribution
 
 Vignette where we use multiple VaR functions to estimate VaR for the same portfolio returns. Do this by creating a list of functions, and mapping over the functions. Then we can gather the wide data frame and plot very easily. Use partials in the list of functions. 
 
