@@ -79,6 +79,12 @@ I quite like the second option. To be honest the weighting function could simply
 
 Another nice property of this design is that then anyone can write a new weighting function that takes a vector of numbers and weights them however it wants. So yeah, I think this is the winner for this reason. 
 
+One issue with these functions is that they are expecting equally spaced returns. What if the returns vector is a time series with uneven time spaces between each. The potentially add an option to reference the time series key,
+
+```r
+age_weighter(time_series = returns$date)
+```
+
 ## API for Multi-Asset Portfolios 
 
 OK so what would we do for this one - it would be nice if it was possible to use the same `value_at_risk` function and use selectors similar to the way `dplyr` does it. Like assume `portfolio_returns` has many columns of returns from different assets. `recipes` does this using functions like `all_predictors()` and `all_outcomes()`. `tidyselect` might offer some help here. 
@@ -227,3 +233,35 @@ fhs %>%
 ```
 
 This seems like a flexible enough API that it might work well.
+
+## Standard Errors 
+
+Have to include standard errors in these results. Simple solution is just to include the columns in the tibble:
+
+```r 
+# tibble with VaR and SE columns 
+```
+
+## Explanatory `summary` functions
+
+While we want to keep output tidy in dataframes, there's a lot to be said for word explanations. For example, working through a delta-normal VaR example the final paragraph reads:
+
+> This suggests that the loss will only exceed €1,324,800 once every 100 10-day periods. This is approximately once every 1,000 trading days or once every four years assuming 250 trading days a year
+
+This would be over the top as an informative message, but being able to explain the computed VaR in money and day terms is a positive user experience. 
+
+## References 
+
+General text reference:
+
+  * Measuring Market Risk, Dowd
+
+Specific papers:
+
+  * On multivariate extensions of Value-at-Risk. Cousin, Di Bernardino. 
+  * Coherent risk measures under filtered historical simulation. Giannopoulos, Tunaru (2004).
+    * https://pdfs.semanticscholar.org/9960/f6d6ad12a642182102151e68dcb25e0e1202.pdf
+  * Spectral measures of risk: A coherent representation of subjective risk aversion
+    * https://pdfs.semanticscholar.org/fafb/750be70a9853883a0d257da1352c202709ec.pdf
+
+
