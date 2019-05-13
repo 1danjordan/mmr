@@ -35,18 +35,47 @@ portfolio_returns %>%
   value_at_risk(returns, alpha, method, weighting)
 ```
 
-Another option would be to only have the method name which refers to any weighting strategies in it:
+## Specifying the VaR Method
+
+Specify the entire method name which refers to any distributions or weighting strategies in it:
 
 ```r
 portfolio_returns %>% 
   value_at_risk(
     returns,
-    alpha = 0.05, 
+    alpha = 0.95, 
     method = "age weighted historical simulation"
   )
 ```
 
 Although this is a horrendous API and would make it difficult/unclear on how to change parameters of the weighting functions. 
+
+## Defaulting to Historical Simulation 
+
+I think generally it's a good idea to default to using historical simulation. Then if the user specifies a distribution, it will use that distribution to estimate the paramaters and tail quantile.
+
+## Specifying the Distribution 
+
+Similar to the `glm` function which requires a link function, this could take a distribution argument.
+
+```r
+# logistic regression - a GLM with a binomial link fn
+glm(y ~ x, data, link = binomial())
+
+portfolio_returns %>% 
+  value_at_risk(returns, 0.95, dist = normal())
+
+portfolio_returns %>% 
+  value_at_risk(returns, 0.95, dist = lognormal())
+```
+
+This would estimate the mean and variance from the data and then compute the VaR quantile using them. `normal` and `lognormal` are function factories returning functions that will do this for us. This makes it easy for others to add distributions they might want to use because they just need to write a distribution function that will:
+
+  * estimate the paramaters they need from the data
+  * estimate the quantile of that distribution with those parameters
+
+
+## Specifying the Weighting Function
 
 I think the best option is to pass a function into the weighting parameter:
 
@@ -55,7 +84,6 @@ portfolio_returns %>%
   value_at_risk(
     returns, 
     alpha = 0.05,
-    method = "historical simulation",
     weighting = weight_age(...)
   )
 
@@ -79,11 +107,25 @@ I quite like the second option. To be honest the weighting function could simply
 
 Another nice property of this design is that then anyone can write a new weighting function that takes a vector of numbers and weights them however it wants. So yeah, I think this is the winner for this reason. 
 
+## Working with Different Types of Vectors
+
 One issue with these functions is that they are expecting equally spaced returns. What if the returns vector is a time series with uneven time spaces between each. The potentially add an option to reference the time series key,
 
 ```r
 age_weighter(time_series = returns$date)
 ```
+
+It would be as easy to write a generic function that does what you want for each different vector type. So you could do something like
+
+```r
+age_weighter.ts <- function(...) { 
+
+  # return weighting vector according to ts
+  ...
+}
+```
+
+This makes it easy for users to write their own weighting functions. 
 
 ## API for Multi-Asset Portfolios 
 
