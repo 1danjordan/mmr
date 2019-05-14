@@ -9,16 +9,21 @@ devtools::install_github("1danjordan/mmr")
 
 data(portfolio_returns)
 
+# Normal VaR approximated from portfolio returns 
 portfolio_returns %>% 
-  group_by(portfolio) %>% 
+  value_at_risk(returns, dist = normal())
+
+# Volatility weighted historical simulation 
+# for each asset in the portfolio 
+portfolio_returns %>% 
+  group_by(asset) %>% 
   value_at_risk(
     returns, 
-    method = "historical simulation",
     weighting = weight_volatility(decay = 0.04)
   ) 
 
 portfolio_returns %>% 
-  expected_shortfall(returns, method = "lognormal")
+  expected_shortfall(returns, dist = lognormal())
 ```
 This package implements an "tidy API" alla the [Tidyverse](https://www.tidyverse.org/). Lot's of inspiration taken from [`yardstick`](https://github.com/tidymodels/yardstick/).  
 
